@@ -42,6 +42,11 @@ export default defineConfig({
   },
   plugins: [
     vue(),
-    dts({ tsconfigPath: './tsconfig.json' })
+    dts({ 
+      tsconfigPath: './tsconfig.json',
+      exclude: ['**/node_modules'],
+      copyDtsFiles: true,
+      rollupTypes: true
+    })
   ],
 })
