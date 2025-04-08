@@ -1,6 +1,6 @@
-import { useConfig } from './index'
-import { createChunkCommon, createChunkHash } from './createChunk'
-import type { UploadChunk } from '../types/index'
+import { UPLOAD_CONFIG } from '@/config'
+import { createChunk } from './createChunk'
+import type { UploadChunk } from '@/types/index'
 
 type SetTask = (chunk: UploadChunk, index: number) => void
 const THREAD_COUNT = navigator.hardwareConcurrency || 4
@@ -11,8 +11,7 @@ export const sliceFile = async (
   totalChunks: number,
   setTask: SetTask
 ) => {
-  const config = useConfig()
-  if (config.hashApi) {
+  if (UPLOAD_CONFIG.hashApi) {
     return createChunksWithWorkers(file, tasksCount, totalChunks, setTask)
   } else {
     return cutFile(file, tasksCount, totalChunks, setTask)
@@ -31,7 +30,6 @@ export const createChunksWithWorkers = async (
     if (threadChunkConut === 0) {
       resolve([])
     } else {
-      const config = useConfig()
       const result: UploadChunk[] = []
 
       let finishCount = 0
@@ -41,7 +39,7 @@ export const createChunksWithWorkers = async (
 
         if (start >= end) break
 
-        const worker = new Worker(new URL('./worker.ts', import.meta.url), {
+        const worker = new Worker(new URL('./worker.ts', __dirname), {
           type: 'module'
         })
 
@@ -49,7 +47,7 @@ export const createChunksWithWorkers = async (
           file,
           start,
           end,
-          chunk_size: config.maxSize
+          chunk_size: UPLOAD_CONFIG.chunkSize
         })
 
         worker.onmessage = (event) => {
@@ -78,14 +76,12 @@ export const cutFile = async (
   file: File,
   start: number,
   end: number,
-  setTask: SetTask,
-  createChunk = createChunkCommon
+  setTask: SetTask
 ): Promise<void> => {
-  const config = useConfig()
   return new Promise(async (resolve, reject) => {
     for (let i = start; i < end; i++) {
       try {
-        const chunk = await createChunk(file, i, config.maxSize)
+        const chunk = await createChunk(file, i, UPLOAD_CONFIG.chunkSize)
         setTask(chunk, i)
       } catch (error) {
         console.error('Error creating chunk:', error)
@@ -101,7 +97,7 @@ onmessage = async (event) => {
 
   const prom = []
   for (let i = start; i < end; i++) {
-    prom.push(createChunkHash(file, i, chunk_size))
+    prom.push(createChunk(file, i, chunk_size))
   }
   const chunks = await Promise.all(prom)
 

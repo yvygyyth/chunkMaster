@@ -1,25 +1,13 @@
-import { TASK_STATUS } from '../types/http'
-import { pool } from '../concurrentPool'
-import type { UploadTask, UploadChunk } from '../types'
-import { progressDefault } from '../types/http'
-import { useConfig } from '@/registry'
-import { requestExtender } from '@net-vert/core'
-import { createFormData } from '@/utils'
+import { TASK_STATUS } from '@/types/http'
+import type { UploadTask, UploadChunk } from '@/types'
+import { progressDefault } from '@/types/http'
+import { UPLOAD_CONFIG } from '@/config'
 import throttle from 'lodash.throttle'
-export const useTaskConfig = () => {
-  const globalConfig = useConfig()
-  const taskConcurrency = new pool(globalConfig.concurrency)
-  return {
-    globalConfig,
-    taskConcurrency
-  }
-}
 
 export default class Task implements UploadTask {
   // 实例属性
   id: string
   controller: AbortController = new AbortController()
-  private useTaskConfig = useTaskConfig()
   private responseInterval: number = 1000
   // 内部进度数据与代理，更新时自动调用防抖回调
   // private _progressInfo: Ref<ProgressInfo> = ref({ ...progressDefault })
@@ -43,27 +31,28 @@ export default class Task implements UploadTask {
 
   // 发送请求的方法
   private request() {
-    return request.post(
-      this.useTaskConfig.globalConfig.uploadApi,
-      createFormData({
-        ...this.metadata,
-        file: this.metadata.chunk,
-        name: 'file',
-        chunk: null
-      }),
-      {
-        signal: this.controller.signal,
-        onUploadProgress: this.updateProgressThrottle.bind(this),
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }
-    )
+    return UPLOAD_CONFIG.uploadApi(this.metadata)
+    // return requestor.post(
+    //   UPLOAD_CONFIG.uploadApi,
+    //   createFormData({
+    //     ...this.metadata,
+    //     file: this.metadata.chunk,
+    //     name: 'file',
+    //     chunk: null
+    //   }),
+    //   {
+    //     signal: this.controller.signal,
+    //     onUploadProgress: this.updateProgressThrottle.bind(this),
+    //     headers: {
+    //       'Content-Type': 'multipart/form-data'
+    //     }
+    //   }
+    // )
   }
 
   // 执行任务，添加到并发控制池中
   execute() {
-    this.promise = this.useTaskConfig.taskConcurrency.add(this.id, this.request.bind(this))
+    this.promise = UPLOAD_CONFIG.pool.add(this.id, this.request.bind(this))
     return this.promise
       .then((res) => {
         // console.log('taskexecute文件上传成功', res)
@@ -79,7 +68,7 @@ export default class Task implements UploadTask {
 
   // 取消任务，根据不同状态进行相应处理
   cancel() {
-    this.useTaskConfig.taskConcurrency.remove(this.id)
+    UPLOAD_CONFIG.pool.remove(this.id)
     this.controller.abort()
   }
 

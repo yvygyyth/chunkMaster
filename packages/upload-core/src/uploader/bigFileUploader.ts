@@ -1,7 +1,7 @@
 import Task from './Task'
 import type { FileUploader, UploadTask, UploadChunk } from '../types/index'
 import { TASK_STATUS, STATUS } from '../types/http'
-import { useConfig } from '@/registry'
+import { UPLOAD_CONFIG } from '@/config'
 import { sliceFile } from './worker'
 import { createChunk } from './createChunk'
 import { reactive } from 'vue'
@@ -10,8 +10,7 @@ export default class BigFileUploader implements FileUploader {
   public tasks: UploadTask[] = []
   public totalChunks: number
   constructor(public file: File) {
-    const config = useConfig()
-    this.totalChunks = Math.ceil(this.file.size / config.maxSize)
+    this.totalChunks = Math.ceil(this.file.size / UPLOAD_CONFIG.chunkSize)
   }
   // 这里可以实现大文件的分片上传逻辑
   async start() {
@@ -29,8 +28,7 @@ export default class BigFileUploader implements FileUploader {
     }
   }
   private async preupload() {
-    const config = useConfig()
-    const chunk = await createChunk(this.file, 0, config.maxSize)
+    const chunk = await createChunk(this.file, 0, UPLOAD_CONFIG.chunkSize)
     this.setTask(chunk, 0)
   }
   private async uploadFile() {

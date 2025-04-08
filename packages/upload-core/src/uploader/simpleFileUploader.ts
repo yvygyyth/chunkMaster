@@ -1,6 +1,6 @@
 import Task from './Task'
-import type { Uploader, UploadTask } from '../types/index'
-import { STATUS, progressDefault } from '../types/http'
+import type { Uploader, UploadTask } from '@/types/index'
+import { STATUS, progressDefault } from '@/types/http'
 import { reactive } from 'vue'
 export default class SimpleFileUploader implements Uploader {
   private _status = STATUS.PENDING
