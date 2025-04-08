@@ -1,12 +1,24 @@
 {
-  "name": "upload-core",
-  "private": true,
+  "name": "@chunk-master/upload-core",
   "version": "0.0.0",
+  "description": "upload-core",
+  "main": "dist/index",
   "type": "module",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "test": "vitest",
+    "build": "run-p type-check build-only",
+    "build-only": "vite build",
+    "type-check": "tsc --noEmit"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "author": "yuzinan <1589937631@qq.com>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
   },
   "dependencies": {
     "@net-vert/core": "^0.3.5",
