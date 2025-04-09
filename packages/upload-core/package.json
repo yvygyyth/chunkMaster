@@ -22,11 +22,10 @@
   },
   "dependencies": {
     "@net-vert/core": "^0.3.5",
-    "arg-singleton": "^1.0.6",
     "lodash.throttle": "^4.1.1",
     "vue": "^3.4.29"
   },
   "devDependencies": {
-    "vue-tsc": "^2.0.21"
+    
   }
 }
