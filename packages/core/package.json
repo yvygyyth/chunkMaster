@@ -1,7 +1,7 @@
 {
-  "name": "@chunk-master/upload-core",
+  "name": "@chunk-master/core",
   "version": "0.0.0",
-  "description": "upload-core",
+  "description": "core",
   "main": "dist/index",
   "type": "module",
   "types": "dist/index.d.ts",

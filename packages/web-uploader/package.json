@@ -9,7 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.4.29"
+    "@arco-design/web-vue": "^2.57.0",
+    "vue": "^3.4.29",
+    "@chunk-master/core": "workspace:^"
   },
   "devDependencies": {
     "@vitejs/plugin-vue-jsx": "^3.1.0"

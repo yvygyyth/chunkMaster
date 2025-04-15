@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { fileSize, extname } from './utils/file';
+import { fileSize, extname } from '@/utils/file';
 
 // 定义 props 的类型
 interface Props {

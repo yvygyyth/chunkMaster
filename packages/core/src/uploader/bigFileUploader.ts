@@ -58,7 +58,7 @@ export default class BigFileUploader implements FileUploader {
 
   setTask(chunk: UploadChunk, index: number) {
     const task = reactive(new Task(chunk))
-    this.tasks.push(task)
+    this.tasks[index] = task
     if (this.status === STATUS.UPLOADING) {
       task.execute()
     }
