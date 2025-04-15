@@ -67,7 +67,21 @@ export interface Uploader {
   cancel: () => void
 }
 
+export type ChunkParams = {
+  /** 原始文件 */
+  file: File
+  /** 切片起始位置 */
+  start: number
+  /** 切片结束位置 */
+  end: number
+  /** 配置的切片大小 */
+  chunkSize: number
+}
+
+export type SetTask = (chunk: UploadChunk, index: number) => void
 
 
-// 组件 Props
-
+export type SliceFile = (
+  e: ChunkParams,
+  callBack: SetTask
+) => Promise<UploadChunk[]>

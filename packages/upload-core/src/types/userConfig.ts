@@ -1,4 +1,4 @@
-import type { FileUploadConfig, RequestConfig, Pool, UploadAdvancedConfig } from './libConfig'
+import type { UploadConfig, Pool } from './libConfig'
 import type { UnifiedRequestor } from '@net-vert/core'
 export interface PoolConfig {
   /** 并发上传的切片数量 */
@@ -12,9 +12,15 @@ export interface PoolConfig {
 }
 
 // 2. 请求相关配置
-export type UserRequestConfig <R extends any> = {
+export type UserRequestConfig = {
   /** 接口 请求体 */
   request:UnifiedRequestor
-} & RequestConfig<R>
 
-export type UserConfig<R extends any = any> = FileUploadConfig & UserRequestConfig<R> & UploadAdvancedConfig & PoolConfig
+  /** 自定义文件切片 */
+  sliceFile?:(
+    e:{file:File, start:number, end:number, chunkSize:number}, 
+    callBack:(blob:Blob)=>void
+  ) => Promise<void>
+}
+
+export type UserConfig<R extends any = any> = UploadConfig<number, R> & UserRequestConfig & PoolConfig

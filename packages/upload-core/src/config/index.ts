@@ -4,6 +4,8 @@ import type { UserConfig } from '@/types/userConfig'
 import { fileUploadConfig } from './default'
 import { initPool, initRequest } from './init'
 import { mergeObjects } from '@/utils'
+import { cutFile } from '@/utils/tool'
+
 // 内部保存配置
 let UPLOAD_CONFIG: UploadConfig
 
@@ -18,6 +20,7 @@ const config = (cfg: UserConfig) => {
 
     UPLOAD_CONFIG = {
         ...mergeObjects(fileUploadConfig, otherConfig),
+        sliceFile: cfg.sliceFile || cutFile,
         pool
     }
 

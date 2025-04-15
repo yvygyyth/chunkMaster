@@ -1,65 +1,54 @@
 import type { UploadChunk } from './upload'
+import type { SliceFile } from '@/types'
 
 export type FileExt = `.${string}`
 
 type Task = () => Promise<any>
 
-// 1. 文件相关配置
-export interface FileUploadConfig<N extends Number = number> {
+export type Pool = {
+  add: (id: string, task: Task) => Promise<any>
+  remove: (id: string) => void
+} & Record<string, any>
+export interface UploadConfig<
+  N extends Number = number,
+  R extends any = any
+>{
   /** 允许上传的扩展名，如 ['jpg', 'png', 'pdf'] */
   exts: FileExt[]
 
   /** 最大允许上传的文件大小（单位：字节）, 若开启 mergeApi, 超过会走大文件上传 */
   maxSize: N
 
-  /** 切片大小（单位：字节），默认建议 1~10MB, 不填使用默认值同maxSize */
+  /** 
+   * 切片大小（单位：字节），默认建议 1~10MB
+   * 注意: 当自定义 sliceFile 函数时，应当遵循此处设置的 chunkSize 值进行切片
+   * 如果必须使用不同的切片大小，请确保上传逻辑能够正确处理
+   */
   chunkSize: N | number
-}
 
-// hash 配置
-export interface HashConfig {
   /** hash 接口URL（可选） */
-  hashApi: ({hash}:{hash:string})=>Promise<boolean>
+  hashApi?: ({hash}:{hash:string})=>Promise<boolean>
 
   /** 自定义hash计算函数 */
   hashcalculation: (blob: Blob) => string | Promise<string>
-}
 
-type UnHashConfig = {
-  hashApi?: never;
-  hashcalculation?: never;
-};
+  /** 多线程计算 */
+  multiThread: boolean
 
-// 2. 请求相关配置
-export type RequestConfig <R extends any> = {
-    /** 上传接口 URL */
-    uploadApi: ((file:UploadChunk) => Promise<R>)
+  /** 上传接口 URL */
+  uploadApi: ((file:UploadChunk) => Promise<R>)
 
-    /** 合并切片接口 URL（可选） */
-    mergeApi?: ((res:R[]) => Promise<R>)
-} & (HashConfig | UnHashConfig);
+  /** 合并切片接口 URL（可选） */
+  mergeApi?: ((res:R[]) => Promise<R>)
 
-export type Pool = {
-  add: (id: string, task: Task) => Promise<any>
-  remove: (id: string) => void
-} & Record<string, any>
+  /** 
+   * 自定义文件切片
+   * @param file 要切片的文件
+   * @param chunkSize 配置中指定的切片大小，建议遵循此值
+   * @param callback 每个切片的回调函数
+   */
+  sliceFile:SliceFile
 
-export interface PoolConfig {
   /** 自定义并发池 */
   pool: Pool
 }
-
-// 3. 其他辅助配置
-export interface UploadAdvancedConfig{
-  /** 上传进度回调（按切片调用） */
-  onProgress?: (percent: number, file: File, chunkIndex?: number) => void
-
-  /** 上传完成回调 */
-  onSuccess?: (file: File, serverResponse: any) => void
-
-  /** 上传失败回调 */
-  onError?: (file: File, error: any) => void
-}
-
-
-export type UploadConfig<R extends any = any> = FileUploadConfig & RequestConfig<R> & UploadAdvancedConfig & PoolConfig

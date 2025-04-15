@@ -2,8 +2,8 @@ import Task from './Task'
 import type { FileUploader, UploadTask, UploadChunk } from '../types/index'
 import { TASK_STATUS, STATUS } from '../types/http'
 import { UPLOAD_CONFIG } from '@/config'
-import { sliceFile } from './worker'
-import { createChunk } from './createChunk'
+import { sliceFile } from './sliceFile'
+import { createChunk } from '../utils/tool'
 import { reactive } from 'vue'
 export default class BigFileUploader implements FileUploader {
   private _status = STATUS.PENDING
@@ -40,11 +40,11 @@ export default class BigFileUploader implements FileUploader {
       this.uploadChunks()
     }
     await sliceFile(this.file, start, this.totalChunks, this.setTask.bind(this))
-    console.log('切片完成', this.tasks)
+
     const taskPromises = this.tasks.map((task) => {
       return task.promise
     })
-    console.log('获取全部promise', taskPromises)
+
     return Promise.all(taskPromises)
   }
 
@@ -57,8 +57,6 @@ export default class BigFileUploader implements FileUploader {
   }
 
   setTask(chunk: UploadChunk, index: number) {
-    console.log('设置任务', chunk, index)
-    console.log('任务环境', this)
     const task = reactive(new Task(chunk))
     this.tasks.push(task)
     if (this.status === STATUS.UPLOADING) {
@@ -71,7 +69,6 @@ export default class BigFileUploader implements FileUploader {
   }
 
   pause() {
-    console.log('暂停大文件上传', this.tasks)
     this.tasks.forEach((task) => {
       if (task.status !== TASK_STATUS.SUCCESS && task.status !== TASK_STATUS.FAIL) {
         task.pause()

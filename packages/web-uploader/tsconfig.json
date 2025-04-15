@@ -4,6 +4,12 @@
     "module":"esnext",
     "incremental": true,
     "moduleResolution": "node",
+    "jsx":"preserve",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment",
+    "allowImportingTsExtensions":true,
+    "noEmit": true,
+    
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
@@ -18,7 +24,7 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts","src/**/*.tsc","src/**/*.vue"],
   "exclude": [
     "src/test/**/*"
   ]
