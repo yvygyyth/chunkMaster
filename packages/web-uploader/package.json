@@ -1,6 +1,6 @@
 {
   "name": "@chunk-master/web-uploader",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Vue file uploader component based on chunk-master core.",
   "main": "dist/index",
   "type": "module",

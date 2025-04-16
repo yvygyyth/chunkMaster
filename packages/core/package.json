@@ -1,6 +1,6 @@
 {
   "name": "@chunk-master/core",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Core library for chunk-based file upload with resumable functionality",
   "main": "dist/index",
   "type": "module",
