@@ -9,7 +9,7 @@ export const createChunk = async (
     const end = Math.min(start + chunkSize, file.size)
     const blob = file.slice(start, end)
 
-    const hash = UPLOAD_CONFIG.hashUrl && UPLOAD_CONFIG.hashcalculation
+    const hash = UPLOAD_CONFIG.hashApi && UPLOAD_CONFIG.hashcalculation
         ? await UPLOAD_CONFIG.hashcalculation(blob)
         : undefined
 

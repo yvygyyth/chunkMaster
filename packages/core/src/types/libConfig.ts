@@ -22,8 +22,8 @@ export interface UploadConfig<
    */
   chunkSize: N | number
 
-  /** hash 接口URL（可选） */
-  hashUrl?: string
+  /** hash 接口（可选） */
+  hashApi?: (hash:string) => boolean | Promise<boolean>
 
   /** 自定义hash计算函数 */
   hashcalculation?: (blob: Blob) => string | Promise<string>
@@ -40,6 +40,11 @@ export interface UploadConfig<
   uploadUrl: string
 
   /** 
+   * 上传接口方式
+   */
+  uploadMethod: "get" | "post" | "delete" | "put"
+
+  /** 
    * 上传前处理钩子
    * 用于处理上传数据，返回最终发送的数据
    * @param chunk 上传块信息
@@ -50,8 +55,9 @@ export interface UploadConfig<
   /** 
    * 合并切片接口地址（可选）
    */
-  mergeUrl?: string
-  
+  mergeApi?: (results: R[], uploader: Uploader) => any | Promise<any>
+
+
   /** 
    * 合并前处理钩子（可选）
    * 用于处理合并请求的数据

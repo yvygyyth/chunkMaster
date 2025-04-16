@@ -38,10 +38,11 @@ export default class Task implements UploadTask {
     ? await UPLOAD_CONFIG.beforeUpload(this.metadata, this.uploader)
     : createFormData(this.metadata)
     
-    return UPLOAD_CONFIG.requestor.post(
-      UPLOAD_CONFIG.uploadUrl,
-      data,
+    return UPLOAD_CONFIG.requestor.request(
       {
+        url: UPLOAD_CONFIG.uploadUrl,
+        method: UPLOAD_CONFIG.uploadMethod,
+        data,
         signal: this.controller.signal,
         onUploadProgress: this.updateProgressThrottle.bind(this)
       }

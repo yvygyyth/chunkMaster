@@ -8,7 +8,6 @@
     "test": "pnpm -r test",
     "dev:web": "pnpm --filter @chunk-master/web-uploader dev",
     "dev:core": "pnpm --filter @chunk-master/core dev",
-    "prepare": "husky install",
     "changeset": "changeset",
     "version": "changeset version",
     "publish": "changeset publish"

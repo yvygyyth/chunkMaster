@@ -15,7 +15,7 @@ export const sliceFile = async (
         chunkSize: UPLOAD_CONFIG.chunkSize
     }
 
-    if (UPLOAD_CONFIG.hashUrl && UPLOAD_CONFIG.hashcalculation && UPLOAD_CONFIG.multiThread) {
+    if (UPLOAD_CONFIG.hashApi && UPLOAD_CONFIG.hashcalculation && UPLOAD_CONFIG.multiThread) {
         return createChunksWithWorkers(chunkParams, setTask)
     } else {
         return UPLOAD_CONFIG.sliceFile(chunkParams, setTask)

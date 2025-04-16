@@ -32,7 +32,7 @@ export default defineComponent({
     })
 
     const { uploaders, addFiles, deleteFiles, startUpload, pauseUpload, pendingFiles, upload } =
-      useUpload([], props.exts)
+      useUpload([])
 
     const filterFiles = (files: File[]) => {
       const isValidExt = (ext: string): ext is `.${string}` => ext.startsWith('.')

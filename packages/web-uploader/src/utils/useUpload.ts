@@ -2,7 +2,7 @@ import { computed, ref } from 'vue'
 
 import { STATUS, createFileUploader } from '@chunk-master/core'
 import type { Uploader } from '@chunk-master/core'
-export function useUpload(initFiles: File[] = [], exts: string[]) {
+export function useUpload(initFiles: File[] = []) {
   const uploaders = ref<Uploader[]>([...initFiles.map(createFileUploader)])
 
   const addFiles = (...args: File[]) => {
