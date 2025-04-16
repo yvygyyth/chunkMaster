@@ -47,8 +47,18 @@ export interface UploadConfig<
    */
   beforeUpload?: (chunk: UploadChunk) => FormData | Record<string, any> | Promise<FormData | Record<string, any>>
 
-  /** 合并切片接口 URL（可选） */
-  mergeApi?: ((res:R[]) => Promise<R>)
+  /** 
+   * 合并切片接口地址（可选）
+   */
+  mergeUrl?: string
+  
+  /** 
+   * 合并前处理钩子（可选）
+   * 用于处理合并请求的数据
+   * @param results 所有切片上传成功的结果数组
+   * @returns 处理后的合并请求数据
+   */
+  beforeMerge?: (results: R[]) => any | Promise<any>
 
   /** 
    * 自定义文件切片

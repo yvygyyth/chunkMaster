@@ -47,7 +47,7 @@ export default class Task implements UploadTask {
 
   // 执行任务，添加到并发控制池中
   execute() {
-    this.promise = UPLOAD_CONFIG.pool.add(this.id, this.request.bind(this))
+    this.promise = this.request.call(this)
     return this.promise
       .then((res) => {
         // console.log('taskexecute文件上传成功', res)
@@ -81,9 +81,11 @@ export default class Task implements UploadTask {
   // 节流更新进度，防止过于频繁更新
   private updateProgressThrottle = throttle(this.updateProgress, this.responseInterval)
   private updateProgress(progressEvent: ProgressEvent) {
+    const { loaded, total } = progressEvent
     this.progressInfo = {
-      ...progressEvent,
-      progress: progressEvent.loaded / progressEvent.total
+      loaded,
+      total,
+      progress: loaded / total
     }
   }
 }

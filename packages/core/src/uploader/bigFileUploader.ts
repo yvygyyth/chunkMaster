@@ -21,9 +21,10 @@ export default class BigFileUploader implements FileUploader {
 
       this._status = STATUS.SUCCESS
     } catch (e: any) {
-      if (e.code !== 'ERR_CANCELED') {
-        this._status = STATUS.FAIL
-        console.error(e)
+      if(this._status = STATUS.PAUSE){
+        return e
+      }else{
+        throw e
       }
     }
   }
@@ -58,23 +59,31 @@ export default class BigFileUploader implements FileUploader {
 
   setTask(chunk: UploadChunk, index: number) {
     const task = reactive(new Task(chunk))
-    this.tasks[index] = task
+    this.tasks.push(task)
+    console.log(index)
     if (this.status === STATUS.UPLOADING) {
       task.execute()
     }
   }
 
   private mergeChunks(result: any[]) {
-    console.log('执行合并分片', result)
+    const arr = UPLOAD_CONFIG.beforeMerge
+    ? UPLOAD_CONFIG.beforeMerge(result)
+    : result
+
+    return UPLOAD_CONFIG.requestor.post(
+      UPLOAD_CONFIG.mergeUrl as string,
+      arr
+    )
   }
 
   pause() {
+    this._status = STATUS.PAUSE
     this.tasks.forEach((task) => {
-      if (task.status !== TASK_STATUS.SUCCESS && task.status !== TASK_STATUS.FAIL) {
+      if (task.status !== TASK_STATUS.SUCCESS) {
         task.pause()
       }
     })
-    this._status = STATUS.PAUSE
   }
 
   cancel() {
@@ -87,23 +96,18 @@ export default class BigFileUploader implements FileUploader {
   }
 
   get progressInfo() {
-    const initial = {
-      loaded: 0
-    }
 
-    const accumulated = this.tasks.reduce((acc, cur: UploadTask): typeof initial => {
+    const accumulatedLoaded = this.tasks.reduce((acc, cur: UploadTask) => {
       const progress = cur.progressInfo
-      return {
-        loaded: acc.loaded + progress.loaded
-      }
-    }, initial)
+      return acc + progress.loaded
+    }, 0)
 
     // 计算全局进度（考虑总分片数）
-    const globalProgress = Math.min(accumulated.loaded, this.file.size) / this.file.size || 0
+    const globalProgress = Math.min(accumulatedLoaded, this.file.size) / this.file.size || 0
 
     return {
       total: this.file.size,
-      ...accumulated,
+      loaded: accumulatedLoaded,
       progress: globalProgress
     }
   }

@@ -1,2 +1,3 @@
 node_modules
 packages/upload-core/tsconfig.tsbuildinfo
+pnpm-lock.yaml

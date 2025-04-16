@@ -19,9 +19,16 @@ export default defineComponent({
   },
   props,
   setup(props) {
-    const { requestor } = config({
+    config({
       request: xhrRequestor,
-      uploadUrl:'/loc/upload'
+      uploadUrl:'/loc/upload',
+      maxSize: props.maxSize,
+      chunkSize: props.maxSize,
+      mergeUrl: '/loc/data',
+      parallelCount:2,
+      beforeMerge(results) {
+        return results.map((r) => r.data)
+      },
     })
 
     const { uploaders, addFiles, deleteFiles, startUpload, pauseUpload, pendingFiles, upload } =
@@ -33,7 +40,8 @@ export default defineComponent({
         const ext = extname(f.name)
         return isValidExt(ext) && props.exts.includes(ext)
       })
-      return usableFiles.filter((f: File) => f.size <= props.maxSize)
+
+      return usableFiles
     }
 
     const handleFileChange = (e: Event) => {
