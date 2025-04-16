@@ -1,12 +1,16 @@
 {
-  "name": "web-uploader",
-  "private": true,
+  "name": "@chunk-master/web-uploader",
   "version": "0.0.0",
+  "description": "Vue file uploader component based on chunk-master core.",
+  "main": "dist/index",
   "type": "module",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "build": "run-p type-check build-only",
+    "build-only": "vite build",
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@arco-design/web-vue": "^2.57.0",
@@ -16,5 +20,21 @@
   "devDependencies": {
     "@vitejs/plugin-vue-jsx": "^3.1.0",
     "sass": "^1.86.3"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "keywords": [
+    "file-upload",
+    "vue-component",
+    "chunk-upload",
+    "large-file",
+    "resumable-upload"
+  ],
+  "author": "yuzinan <1589937631@qq.com>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
   }
 }
