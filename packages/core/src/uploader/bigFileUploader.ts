@@ -79,13 +79,13 @@ export default class BigFileUploader implements Uploader {
   }
 
   private mergeChunks(result: any[]) {
-    const arr = UPLOAD_CONFIG.beforeMerge
-    ? UPLOAD_CONFIG.beforeMerge(result)
+    const data = UPLOAD_CONFIG.beforeMerge
+    ? UPLOAD_CONFIG.beforeMerge(result, this)
     : result
 
     return UPLOAD_CONFIG.requestor.post(
       UPLOAD_CONFIG.mergeUrl as string,
-      arr
+      data
     )
   }
 

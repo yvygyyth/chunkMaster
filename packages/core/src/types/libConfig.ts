@@ -1,4 +1,4 @@
-import type { UploadChunk } from './upload'
+import type { UploadChunk, Uploader } from './upload'
 import type { SliceFile } from '@/types/upload'
 import type { Requestor } from '@net-vert/core'
 
@@ -45,7 +45,7 @@ export interface UploadConfig<
    * @param chunk 上传块信息
    * @returns 处理后的请求数据
    */
-  beforeUpload?: (chunk: UploadChunk) => FormData | Record<string, any> | Promise<FormData | Record<string, any>>
+  beforeUpload?: (chunk: UploadChunk, uploader: Uploader) => FormData | Record<string, any> | Promise<FormData | Record<string, any>>
 
   /** 
    * 合并切片接口地址（可选）
@@ -58,7 +58,7 @@ export interface UploadConfig<
    * @param results 所有切片上传成功的结果数组
    * @returns 处理后的合并请求数据
    */
-  beforeMerge?: (results: R[]) => any | Promise<any>
+  beforeMerge?: (results: R[], uploader: Uploader) => any | Promise<any>
 
   /** 
    * 自定义文件切片

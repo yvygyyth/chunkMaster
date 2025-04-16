@@ -35,7 +35,7 @@ export default class Task implements UploadTask {
   // 发送请求的方法
   private async request() {
     const data = UPLOAD_CONFIG.beforeUpload
-    ? await UPLOAD_CONFIG.beforeUpload(this.metadata)
+    ? await UPLOAD_CONFIG.beforeUpload(this.metadata, this.uploader)
     : createFormData(this.metadata)
     
     return UPLOAD_CONFIG.requestor.post(
