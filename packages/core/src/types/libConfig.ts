@@ -23,7 +23,7 @@ export interface UploadConfig<
   chunkSize: N | number
 
   /** hash 接口URL（可选） */
-  hashApi?: ({hash}:{hash:string})=>Promise<boolean>
+  hashUrl?: string
 
   /** 自定义hash计算函数 */
   hashcalculation?: (blob: Blob) => string | Promise<string>
