@@ -1,6 +1,6 @@
 import { UPLOAD_CONFIG } from '@/config'
 import { createChunksWithWorkers } from '../utils/worker'
-import type { SetTask } from '@/types/index'
+import type { SetTask } from '@/types/upload'
 
 export const sliceFile = async (
     file: File,
@@ -15,7 +15,7 @@ export const sliceFile = async (
         chunkSize: UPLOAD_CONFIG.chunkSize
     }
 
-    if (UPLOAD_CONFIG.hashApi && UPLOAD_CONFIG.multiThread) {
+    if (UPLOAD_CONFIG.hashApi && UPLOAD_CONFIG.hashcalculation && UPLOAD_CONFIG.multiThread) {
         return createChunksWithWorkers(chunkParams, setTask)
     } else {
         return UPLOAD_CONFIG.sliceFile(chunkParams, setTask)

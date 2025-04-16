@@ -1,7 +1,6 @@
 import type { UploadChunk } from './upload'
-import type { SliceFile } from '@/types'
-
-export type FileExt = `.${string}`
+import type { SliceFile } from '@/types/upload'
+import type { Requestor } from '@net-vert/core'
 
 type Task = () => Promise<any>
 
@@ -13,9 +12,6 @@ export interface UploadConfig<
   N extends Number = number,
   R extends any = any
 >{
-  /** 允许上传的扩展名，如 ['jpg', 'png', 'pdf'] */
-  exts: FileExt[]
-
   /** 最大允许上传的文件大小（单位：字节）, 若开启 mergeApi, 超过会走大文件上传 */
   maxSize: N
 
@@ -30,13 +26,26 @@ export interface UploadConfig<
   hashApi?: ({hash}:{hash:string})=>Promise<boolean>
 
   /** 自定义hash计算函数 */
-  hashcalculation: (blob: Blob) => string | Promise<string>
+  hashcalculation?: (blob: Blob) => string | Promise<string>
 
   /** 多线程计算 */
   multiThread: boolean
 
-  /** 上传接口 URL */
-  uploadApi: ((file:UploadChunk) => Promise<R>)
+  /** 请求者 */
+  requestor:Requestor
+
+  /** 
+   * 上传接口地址
+   */
+  uploadUrl: string
+
+  /** 
+   * 上传前处理钩子
+   * 用于处理上传数据，返回最终发送的数据
+   * @param chunk 上传块信息
+   * @returns 处理后的请求数据
+   */
+  beforeUpload?: (chunk: UploadChunk) => FormData | Record<string, any> | Promise<FormData | Record<string, any>>
 
   /** 合并切片接口 URL（可选） */
   mergeApi?: ((res:R[]) => Promise<R>)

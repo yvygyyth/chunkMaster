@@ -1,14 +1,13 @@
-{
+{ 
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "module":"esnext",
     "incremental": true,
     "moduleResolution": "node",
-    "jsx":"preserve",
+    "jsx": "preserve",
     "jsxFactory": "h",
     "jsxFragmentFactory": "Fragment",
-    "allowImportingTsExtensions":true,
-    "noEmit": true,
+    "noEmit": false,
     
     /* Linting */
     "strict": true,
@@ -24,7 +23,7 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*.ts","src/**/*.tsc","src/**/*.vue"],
+  "include": ["src/**/*"],
   "exclude": [
     "src/test/**/*"
   ]

@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import HelloWorld from '@/components/index'
+import UploadComponent from '@/UploadComponent/index'
+
 </script>
 
 <template>
+    <UploadComponent
 
+    ></UploadComponent>
 </template>
 
 <style scoped>

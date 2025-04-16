@@ -1,4 +1,4 @@
-import type { ChunkParams } from '@/types/index'
+import type { ChunkParams } from '@/types/upload'
 import { UPLOAD_CONFIG } from '@/config'
 
 /**

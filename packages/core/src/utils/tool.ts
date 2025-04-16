@@ -1,5 +1,5 @@
 import { UPLOAD_CONFIG } from '@/config'
-import type { ChunkParams, SetTask, SliceFile, UploadChunk } from '@/types/index'
+import type { ChunkParams, SetTask, SliceFile, UploadChunk } from '@/types/upload'
 export const createChunk = async (
     file: File,
     index: number,

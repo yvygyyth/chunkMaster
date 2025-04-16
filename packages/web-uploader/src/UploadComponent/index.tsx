@@ -1,18 +1,15 @@
-import { defineComponent, ref, type PropType } from 'vue'
+import { defineComponent } from 'vue'
 import DragArea from './DragArea.vue'
 import FileTable from './FileTable'
-import styles from './style.module.scss'
+import './style.scss'
 import { Button } from '@arco-design/web-vue'
-import { useUpload } from './utils/useUpload'
-import { extname, fileSize } from './utils/file.js'
-import { inject } from './utils/uploader/index'
+import { useUpload } from '@/utils/useUpload'
+import { extname } from '@/utils/file'
+import { config } from '@chunk-master/core'
+
 import { props } from './props'
+import { xhrRequestor } from '@/utils/request'
 // 扩展 InputHTMLAttributes 类型
-declare module 'vue' {
-  interface HTMLAttributes {
-    webkitdirectory?: boolean
-  }
-}
 
 export default defineComponent({
   name: 'UploadComponent',
@@ -22,7 +19,10 @@ export default defineComponent({
   },
   props,
   setup(props) {
-    inject(props)
+    const { requestor } = config({
+      request: xhrRequestor,
+      uploadUrl:'/loc/upload'
+    })
 
     const { uploaders, addFiles, deleteFiles, startUpload, pauseUpload, pendingFiles, upload } =
       useUpload([], props.exts)
@@ -33,11 +33,7 @@ export default defineComponent({
         const ext = extname(f.name)
         return isValidExt(ext) && props.exts.includes(ext)
       })
-      if (props.mergeApi) {
-        return usableFiles
-      } else {
-        return usableFiles.filter((f: File) => f.size <= props.maxSize)
-      }
+      return usableFiles.filter((f: File) => f.size <= props.maxSize)
     }
 
     const handleFileChange = (e: Event) => {
@@ -48,13 +44,13 @@ export default defineComponent({
     }
 
     return () => (
-      <div class={[styles['container']]}>
+      <div class='container'>
         <DragArea
           exts={props.exts}
           fileSize={props.maxSize}
           onDrop={(event: any) => addFiles(...event)}
         ></DragArea>
-        <div class={[styles['operation']]}>
+        <div class='operation'>
           <Button type="primary">
             选择文件
             <input type="file" multiple onChange={handleFileChange} />

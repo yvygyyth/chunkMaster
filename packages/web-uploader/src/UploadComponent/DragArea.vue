@@ -25,12 +25,10 @@ import { computed, ref } from 'vue';
 import { fileSize, extname } from '@/utils/file';
 
 // 定义 props 的类型
-interface Props {
+const props = withDefaults(defineProps<{
   exts?: string[]; // 支持的文件扩展名
   fileSize?: number; // 文件大小限制（单位：字节）
-}
-
-const props = withDefaults(defineProps<Props>(), {
+}>(), {
   exts: () => ['.jpg', '.jpeg', '.png', '.ppt', '.pdf', '.docx', '.doc', '.xls', '.xlsx'],
   fileSize: 1024 * 1024, // 默认 1MB
 });
@@ -77,6 +75,7 @@ const dropHandler = async (e: DragEvent) => {
 
   // 处理拖拽的文件或目录
   const results = await Promise.all(
+    // @ts-ignore
     [...e.dataTransfer.items].map((item) => handleEntry(item.webkitGetAsEntry()))
   );
 

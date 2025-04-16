@@ -1,4 +1,4 @@
-import type { UploadChunk, ChunkParams, SliceFile } from '@/types/index'
+import type { UploadChunk, ChunkParams, SliceFile } from '@/types/upload'
 
 const THREAD_COUNT = navigator.hardwareConcurrency || 4
 

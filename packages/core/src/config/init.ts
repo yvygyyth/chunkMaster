@@ -5,22 +5,15 @@ import { poolConfig } from './default'
 import type { TaskQueue } from ".pnpm/id-queue@1.0.10/node_modules/id-queue";
 
 export const initPool = (cfg: UserConfig) => {
-    const { pool, parallelCount, retries } = cfg
-    if(pool){
-        return {
-            pool,
-            requestor:undefined
-        }
-    }else{
-        const { requestor, concurrentPool } = requestExtender.concurrentPoolRequestor({
-            ...poolConfig,
-            parallelCount,
-            retries
-        })
-        return {
-            pool: concurrentPool,
-            requestor
-        }
+    const { parallelCount, retries } = cfg
+    const { requestor, concurrentPool } = requestExtender.concurrentPoolRequestor({
+        ...poolConfig,
+        parallelCount,
+        retries
+    })
+    return {
+        pool: concurrentPool,
+        requestor
     }
 }
 

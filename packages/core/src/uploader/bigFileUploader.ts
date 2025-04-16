@@ -1,5 +1,5 @@
 import Task from './Task'
-import type { FileUploader, UploadTask, UploadChunk } from '../types/index'
+import type { FileUploader, UploadTask, UploadChunk } from '@/types/upload'
 import { TASK_STATUS, STATUS } from '../types/http'
 import { UPLOAD_CONFIG } from '@/config'
 import { sliceFile } from './sliceFile'

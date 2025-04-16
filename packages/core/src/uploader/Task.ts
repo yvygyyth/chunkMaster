@@ -1,9 +1,9 @@
 import { TASK_STATUS } from '@/types/http'
-import type { UploadTask, UploadChunk } from '@/types'
+import type { UploadTask, UploadChunk } from '@/types/upload'
 import { progressDefault } from '@/types/http'
 import { UPLOAD_CONFIG } from '@/config'
 import throttle from 'lodash.throttle'
-
+import { createFormData } from '@/utils'
 export default class Task implements UploadTask {
   // 实例属性
   id: string
@@ -30,24 +30,19 @@ export default class Task implements UploadTask {
   }
 
   // 发送请求的方法
-  private request() {
-    return UPLOAD_CONFIG.uploadApi(this.metadata)
-    // return requestor.post(
-    //   UPLOAD_CONFIG.uploadApi,
-    //   createFormData({
-    //     ...this.metadata,
-    //     file: this.metadata.chunk,
-    //     name: 'file',
-    //     chunk: null
-    //   }),
-    //   {
-    //     signal: this.controller.signal,
-    //     onUploadProgress: this.updateProgressThrottle.bind(this),
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data'
-    //     }
-    //   }
-    // )
+  private async request() {
+    const data = UPLOAD_CONFIG.beforeUpload
+    ? await UPLOAD_CONFIG.beforeUpload(this.metadata)
+    : createFormData(this.metadata)
+    
+    return UPLOAD_CONFIG.requestor.post(
+      UPLOAD_CONFIG.uploadUrl,
+      data,
+      {
+        signal: this.controller.signal,
+        onUploadProgress: this.updateProgressThrottle.bind(this)
+      }
+    )
   }
 
   // 执行任务，添加到并发控制池中

@@ -21,6 +21,7 @@ const config = (cfg: UserConfig) => {
     UPLOAD_CONFIG = {
         ...mergeObjects(fileUploadConfig, otherConfig),
         sliceFile: cfg.sliceFile || cutFile,
+        requestor,
         pool
     }
 

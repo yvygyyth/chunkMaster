@@ -1,11 +1,10 @@
 import { defineComponent, computed, type PropType } from 'vue'
-import { extname, fileSize } from './utils/file'
-import type { Uploader, FileExt } from './utils/uploader/types'
-import { uploadStatus } from './utils/uploader/types/http'
+import { extname, fileSize } from '@/utils/file'
+import type { Uploader } from '@chunk-master/core'
+import { uploadStatus } from '@/types/http'
 import { Table, Tag, Progress, Button, Space } from '@arco-design/web-vue'
 import type { TableColumnData, TableData } from '@arco-design/web-vue'
-import { STATUS } from './utils/uploader/types/http'
-import styles from './style.module.scss'
+import { STATUS } from '@chunk-master/core'
 
 export default defineComponent({
   name: 'FileTable',

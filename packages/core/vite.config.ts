@@ -19,10 +19,12 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'src/index.ts'),
-      name: 'uploadCore',
-      fileName: 'index',
-      formats: ['es', 'umd']
+      entry: {
+        'index': path.resolve(__dirname, 'src/index.ts'),
+        // 'types': path.resolve(__dirname, 'src/types/index.ts')
+      },
+      fileName: (format, entryName) => `${entryName}.js`,
+      formats: ['es']
     },
     rollupOptions: {
       external: (id) => {
