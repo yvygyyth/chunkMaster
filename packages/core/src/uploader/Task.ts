@@ -1,5 +1,5 @@
 import { TASK_STATUS } from '@/types/http'
-import type { UploadTask, UploadChunk } from '@/types/upload'
+import type { UploadTask, UploadChunk, Uploader } from '@/types/upload'
 import { progressDefault } from '@/types/http'
 import { UPLOAD_CONFIG } from '@/config'
 import throttle from 'lodash.throttle'
@@ -16,7 +16,10 @@ export default class Task implements UploadTask {
   status = TASK_STATUS.PENDING
   promise = new Promise(() => {})
   // 构造函数
-  constructor(public metadata: UploadChunk) {
+  constructor(
+    public metadata: UploadChunk,
+    public uploader: Uploader
+  ) {
     this.metadata = metadata
     if (this.metadata.hash) {
       this.id = this.metadata.hash

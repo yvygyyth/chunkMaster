@@ -41,6 +41,9 @@ export interface UploadTask<T = any> {
   pause: () => void
   /** 文件元数据 */
   metadata: UploadChunk
+  /** 父上传器信息 */
+  uploader: Uploader
+
   /** 当前任务promise */
   promise: Promise<T>
 }

@@ -47,7 +47,7 @@ export default class SimpleFileUploader implements Uploader {
         end: this.file.size,
         size: this.file.size,
         chunk: this.file
-      })
+      },this)
     )
     this.tasks.push(task)
     await task.execute()
