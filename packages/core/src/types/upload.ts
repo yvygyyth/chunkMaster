@@ -90,20 +90,12 @@ export interface UploadTask<T = any> {
   promise: Promise<T>
 }
 
-export interface FileUploader {
-  file: File
-
-  start: () => Promise<void>
-  pause: () => void
-  cancel: () => void
-}
-
 export interface Uploader {
   progressInfo: ProgressInfo
   status: UploadStatus
   tasks: UploadTask[]
-
   file: File
+  fileInfo:any
 
   start: () => Promise<void>
   pause: () => void

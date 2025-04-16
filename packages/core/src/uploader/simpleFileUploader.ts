@@ -1,11 +1,25 @@
 import Task from './Task'
 import type { Uploader, UploadTask } from '@/types/upload'
 import { STATUS, progressDefault } from '@/types/http'
+import { UPLOAD_CONFIG } from '@/config'
 import { reactive } from 'vue'
 export default class SimpleFileUploader implements Uploader {
-  private _status = STATUS.PENDING
+  private _status = STATUS.PREPARING
   public tasks: UploadTask[] = []
-  constructor(public file: File) {}
+  public fileInfo: any | null = null
+  constructor(public file: File) {
+    if(UPLOAD_CONFIG.prepareFileInfo){
+      UPLOAD_CONFIG.prepareFileInfo(this.file).then(res=>{
+        this.fileInfo = res
+        this._status = STATUS.PENDING
+      }).catch(err=>{
+        this._status = STATUS.PREPARE_FAILED
+        throw err
+      })
+    }else{
+      this._status = STATUS.PENDING
+    }
+  }
   async start() {
     try {
       this._status = STATUS.UPLOADING

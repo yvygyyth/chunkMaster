@@ -1,16 +1,28 @@
 import Task from './Task'
-import type { FileUploader, UploadTask, UploadChunk } from '@/types/upload'
-import { TASK_STATUS, STATUS } from '../types/http'
+import type { Uploader, UploadTask, UploadChunk } from '@/types/upload'
+import { TASK_STATUS, STATUS } from '@/types/http'
 import { UPLOAD_CONFIG } from '@/config'
 import { sliceFile } from './sliceFile'
-import { createChunk } from '../utils/tool'
+import { createChunk } from '@/utils/tool'
 import { reactive } from 'vue'
-export default class BigFileUploader implements FileUploader {
-  private _status = STATUS.PENDING
+export default class BigFileUploader implements Uploader {
+  private _status = STATUS.PREPARING
   public tasks: UploadTask[] = []
   public totalChunks: number
+  public fileInfo: any | null = null
   constructor(public file: File) {
     this.totalChunks = Math.ceil(this.file.size / UPLOAD_CONFIG.chunkSize)
+    if(UPLOAD_CONFIG.prepareFileInfo){
+      UPLOAD_CONFIG.prepareFileInfo(this.file).then(res=>{
+        this.fileInfo = res
+        this._status = STATUS.PENDING
+      }).catch(err=>{
+        this._status = STATUS.PREPARE_FAILED
+        throw err
+      })
+    }else{
+      this._status = STATUS.PENDING
+    }
   }
   // 这里可以实现大文件的分片上传逻辑
   async start() {

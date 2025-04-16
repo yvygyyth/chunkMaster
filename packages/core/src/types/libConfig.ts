@@ -68,6 +68,14 @@ export interface UploadConfig<
    */
   sliceFile:SliceFile
 
+  /** 
+   * 异步文件信息提供器（可选）
+   * 在上传开始前异步获取或增强文件信息
+   * @param file 原始文件对象
+   * @returns Promise 返回原始File或增强的文件信息
+   */
+  prepareFileInfo?: (file: File) => Promise<any>;
+
   /** 自定义并发池 */
   pool: Pool
 }
